@@ -5,7 +5,9 @@
 
 color ray_color(const ray& r)
 {
-    return color(0, 0, 0);
+    vec3 unit_direction = unit_vector(r.getDirection());
+    auto a = 0.5*(unit_direction.y() + 1.0);
+    return (1.0-a)*color(1.0, 1.0, 1.0) + a*color(0.5, 0.7, 1.0);
 }
 
 int main()
@@ -15,21 +17,19 @@ int main()
     int imageHeight = int(imageWidth / aspectRatio);
     imageHeight = (imageHeight < 1) ? 1 : imageHeight;
 
-    auto focalLenght = 1.0;
+    auto focalLength = 1.0;
     auto viewportHeight = 2.0;
     auto viewportWidth = viewportHeight * (double(imageWidth) / double(imageHeight));
     auto cameraCenter = point3(0, 0, 0);
 
     auto viewportU = vec3(viewportWidth, 0, 0);
-    auto viewportV = vec3(0, -viewportWidth, 0);
+    auto viewportV = vec3(0, -viewportHeight, 0);
 
     auto pixelDeltaU = viewportU / imageWidth;
     auto pixelDeltaV = viewportV / imageHeight;
 
-    auto viewportUpperLeft = cameraCenter - vec3(0, 0, focalLenght) - viewportU / 2 - viewportV / 2;
+    auto viewportUpperLeft = cameraCenter - vec3(0, 0, focalLength) - viewportU / 2 - viewportV / 2;
     auto loc = viewportUpperLeft + 0.5 * (pixelDeltaU + pixelDeltaV);
-
-
 
 
     std::cout << "P3\n" << imageWidth << ' ' << imageHeight << "\n255\n";
